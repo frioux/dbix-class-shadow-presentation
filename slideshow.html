@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+   <title>DBIx::Class::Shadow</title>
+
+   <!-- configuration parameters -->
+   <meta name="defaultView" content="slideshow" />
+   <meta name="controlVis" content="hidden" />
+
+  <!-- configuration transition extension -->
+   <meta name="tranSitions" content="true" />
+   <meta name="fadeDuration" content="500" />
+   <meta name="incrDuration" content="250" />
+
+   <!-- configuration autoplay extension -->
+   <meta name="autoMatic" content="false" />
+   <meta name="playLoop" content="true" />
+   <meta name="playDelay" content="10" />
+
+   <!-- configuration audio extension -->
+   <meta name="audioSupport" content="false" />
+   <meta name="audioVolume" content="0" />
+   <meta name="audioError" content="false" />
+
+   <!-- configuration audio debug -->
+   <meta name="audioDebug" content="false" />
+
+   <!-- style sheet links -->
+   <link rel="stylesheet" href="ui/scala_utf/slides.css" type="text/css" media="projection" id="slideProj" />
+   <link rel="stylesheet" href="ui/scala_utf/outline.css" type="text/css" media="screen" id="outlineStyle" />
+   <link rel="stylesheet" href="ui/scala_utf/print.css" type="text/css" media="print" id="slidePrint" />
+   <link rel="stylesheet" href="ui/scala_utf/opera.css" type="text/css" media="projection" id="operaFix" />
+
+   <!-- embedded styles -->
+   <style type="text/css" media="all">
+      .imgcon {
+         width: 100%;
+         margin: 0 auto;
+         padding: 0;
+         text-align: center;
+      }
+      #anim {
+         width: 33%;
+         height: 320px;
+         position: relative;
+      }
+      #anim img {
+         position: absolute;
+         top: 0px;
+         left: 0px;
+      }
+      .red {color: red;}
+      .grey {color: gray;}
+   </style>
+
+   <!-- S5 JS -->
+   <script src="ui/scala_utf/slides.js" type="text/javascript"></script>
+</head>
+<body>
+
+<div class="layout">
+   <div id="controls"><!-- DO NOT EDIT --></div>
+   <div id="currentSlide"><!-- DO NOT EDIT --></div>
+   <div id="header"></div>
+   <div id="footer">
+      <h1>DBIx::Class::Shadow</h1>
+      <h2>YAPC::NA 2011</h2>
+   </div>
+</div>
+
+<div class="presentation">
+
+   <div class="slide">
+      <h1>DBIx::Class::Shadow</h1>
+      <h4>Peter Rabbitson (ribasushi)</h4>
+      <h4>Arthur Axel "fRIOUX" Schmidt</h4>
+   </div>
+
+   <div class="slide">
+      <h1>CRAZY SQL</h1>
+   </div>
+
+   <div class="slide">
+      <h1>What is DBIx::Class::Shadow?</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Can't I just use DBIx::Class::Journal?</h1>
+      <ul class="incremental">
+         <li>Everything must be in a transaction</li>
+         <li>All or none (columns)</li>
+         <li>Not very helpful API for real usage</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Terminology</h1>
+      <ul class="incremental">
+         <li>Shadow - a specific version for a given row object</li>
+         <li>Changeset</li>
+         <li>Shadow Stage</li>
+         <li>Shadow Lifecycle</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Setup</h1>
+      <ul class="incremental">
+         <li>Natural: Config per Result</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>ResultSet methods</h1>
+      <ul class="incremental">
+         <li></li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Applications</h1>
+      <ul class="incremental">
+         <li>Database Changelog For Debugging</li>
+         <li>Database Changelog For Users (See JIRA)</li>
+         <li>Reverting Changes</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Questions?</h1>
+   </div>
+
+   <div class="slide">
+      <h1>THE END</h1>
+   </div>
+
+</div>
+</body>
+</html>
