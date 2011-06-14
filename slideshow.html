@@ -75,8 +75,8 @@
 
    <div class="slide">
       <h1>DBIx::Class::Shadow</h1>
-      <h4>Peter Rabbitson (ribasushi)</h4>
-      <h4>Arthur Axel "fRIOUX" Schmidt</h4>
+      <h4>guts: Peter Rabbitson (ribasushi)</h4>
+      <h4>features: Arthur Axel "fRIOUX" Schmidt</h4>
    </div>
 
    <div class="slide">
@@ -106,7 +106,7 @@
       <ul class="incremental">
          <li>Not cross DB</li>
          <li>Not nearly as powerful</li>
-         <li>But soon you can (soon?) anyway</li>
+         <li>But you can (soon?) anyway</li>
       </ul>
    </div>
 
@@ -121,10 +121,23 @@
    </div>
 
    <div class="slide">
+      <h1>So this is better?</h1>
+      <ul class="incremental">
+         <li>MultiPK works</li>
+         <li>Only audit what you care about</li>
+         <li>Use transactions/changesets when they make sense</li>
+         <li>Inflate your actual results from shadows</li>
+         <li>Cascades are supported*</li>
+         <li>Cross DB</li>
+         <li>Proven API</li>
+      </ul>
+   </div>
+
+   <div class="slide">
       <h1>Terminology</h1>
       <ul class="incremental">
          <li>Shadow - a specific version for a given row object</li>
-         <li>Changeset - a transaction of changes optionally tied to a user (or anything else)</li>
+         <li>Changeset - a transaction of changes optionally tied to a user (or anything else), a db snapshot</li>
          <li>Shadow Stage - insert | update | delete</li>
          <li>Shadow Lifecycle - persistent across inserts, updates, and deletes</li>
       </ul>
@@ -135,16 +148,14 @@
 <pre>
 package MyApp::Schema;
 
-use warnings;
-use strict;
-
 use parent 'DBIx::Class::Schema';
-__PACKAGE__-&gt;load_components(qw/Schema::Shadow/);
+my $p = __PACKAGE__;
+$p-&gt;load_components(qw/Schema::Shadow/);
 
-__PACKAGE__-&gt;shadow_result_base_class( 'DBICTest::S::BaseShadowResult' );
-__PACKAGE__-&gt;shadow_changeset_result( 'DBIC::ShadowTest::Result::Changeset' );
+$p-&gt;shadow_result_base_class( '::BaseShadowResult' );
+$p-&gt;shadow_changeset_result( '::Changeset' );
 
-__PACKAGE__-&gt;load_namespaces;
+$p-&gt;load_namespaces;
 
 1;
 </pre>
@@ -155,25 +166,24 @@ __PACKAGE__-&gt;load_namespaces;
 <pre>
 package MyApp::Schema::Result::Artist;
 
-use warnings;
-use strict;
+use parent 'MyApp::Schema::Result';
 
-use base 'MyApp::Schema::Result';
+my $p = __PACKAGE__;
 # defaults to all columns
-__PACKAGE__-&gt;load_components('Shadow');
-__PACKAGE__-&gt;shadow_columns([qw(id name)]);
+$p-&gt;load_components('Shadow');
+$p-&gt;shadow_columns([qw(id name)]);
 
-__PACKAGE__-&gt;table('artists');
+$p-&gt;table('artists');
 
-__PACKAGE__-&gt;add_columns(
+$p-&gt;add_columns(
   id =&gt; { data_type =&gt; 'int' },
   name =&gt; { data_type =&gt; 'varchar', size =&gt; 30 },
   notes =&gt; { data_type =&gt; 'text' },
 );
 
-__PACKAGE__-&gt;set_primary_key('id');
+$p-&gt;set_primary_key('id');
 
-__PACKAGE__-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
+$p-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
 
 1;
 </pre>
@@ -182,7 +192,11 @@ __PACKAGE__-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
    <div class="slide">
       <h1>Changeset Usage</h1>
 <pre>
-$schema-&gt;changeset_do({ system =&gt; undef, user_id =&gt; 5, session_id =&gt; 76 }, sub {
+$schema-&gt;changeset_do({
+   system     =&gt; undef,
+   user_id    =&gt; 5,
+   session_id =&gt; 76
+}, sub {
    ...
 })
 </pre>
@@ -192,10 +206,13 @@ $schema-&gt;changeset_do({ system =&gt; undef, user_id =&gt; 5, session_id =&gt;
       <h1>Shadow ResultSet methods</h1>
       <ul class="incremental">
          <li>version</li>
+         <li>inserts</li>
+         <li>updates</li>
+         <li>deletes</li>
          <li>before</li>
          <li>after</li>
          <li>changeset</li>
-         <li>groknik</li>
+         <li>change</li>
       </ul>
    </div>
 
@@ -226,19 +243,50 @@ $rs-&gt;before(
 
    <div class="slide">
       <h1>Shadow ResultSet methods (after)</h1>
+      <p>Same as before</p>
    </div>
 
    <div class="slide">
       <h1>Shadow ResultSet methods (changeset)</h1>
+      <p>???</p>
    </div>
 
    <div class="slide">
-      <h1>Shadow ResultSet methods (groknik)</h1>
+      <h1>Shadow ResultSet methods (change)</h1>
+<pre>
+$rs-&gt;change(
+   last_name =&gt; 'Cantrell', 'Schmidt'
+);
+</pre>
    </div>
 
 
    <div class="slide">
-      <h1>Changeset: See the schema at a given state</h1>
+      <h1>Shadow ResultSet methods (chain)</h1>
+<pre>
+$rs-&gt;after(
+   datetime =&gt; $last_sunday
+)-&gt;before(
+   datetime =&gt; $this_saturday
+)-&gt;change(
+   log_location =&gt; '/var/log', '/home/frew/log'
+)
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow Result methods</h1>
+      <ul class="incremental">
+         <li>as_result</li>
+         <li>as_diff</li>
+         <li>previous</li>
+         <li>next</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Changeset: Schema at a given state</h1>
+      <p>???</p>
    </div>
 
    <div class="slide">
