@@ -80,19 +80,43 @@
    </div>
 
    <div class="slide">
-      <h1>CRAZY SQL</h1>
-   </div>
-
-   <div class="slide">
       <h1>What is DBIx::Class::Shadow?</h1>
+      <ul class="incremental">
+         <li>Database Auditing tool</li>
+         <li>Flexible</li>
+         <li>CRAZY SQL</li>
+      </ul>
    </div>
 
    <div class="slide">
       <h1>Can't I just use DBIx::Class::Journal?</h1>
       <ul class="incremental">
-         <li>Everything must be in a transaction</li>
+         <li>Can only version single PK tables (no join tables)</li>
+         <li>Uses separate schema and connection (good and bad)</li>
          <li>All or none (columns)</li>
+         <li>Everything must be in a transaction</li>
+         <li>Awkward to set up</li>
          <li>Not very helpful API for real usage</li>
+         <li>Update/Delete cascades not supported</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Can't I just use Database Triggers?</h1>
+      <ul class="incremental">
+         <li>Not cross DB</li>
+         <li>Not nearly as powerful</li>
+         <li>But soon you can (soon?) anyway</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Can't I log business level transactions?</h1>
+      <ul class="incremental">
+         <li>Short sighted</li>
+         <li>Lots of work</li>
+         <li>You'll probably do it wrong</li>
+         <li>Create your own API :/</li>
       </ul>
    </div>
 
@@ -100,24 +124,121 @@
       <h1>Terminology</h1>
       <ul class="incremental">
          <li>Shadow - a specific version for a given row object</li>
-         <li>Changeset</li>
-         <li>Shadow Stage</li>
-         <li>Shadow Lifecycle</li>
+         <li>Changeset - a transaction of changes optionally tied to a user (or anything else)</li>
+         <li>Shadow Stage - insert | update | delete</li>
+         <li>Shadow Lifecycle - persistent across inserts, updates, and deletes</li>
       </ul>
    </div>
 
    <div class="slide">
-      <h1>Setup</h1>
+      <h1>Setup (schema)</h1>
+<pre>
+package MyApp::Schema;
+
+use warnings;
+use strict;
+
+use parent 'DBIx::Class::Schema';
+__PACKAGE__-&gt;load_components(qw/Schema::Shadow/);
+
+__PACKAGE__-&gt;shadow_result_base_class( 'DBICTest::S::BaseShadowResult' );
+__PACKAGE__-&gt;shadow_changeset_result( 'DBIC::ShadowTest::Result::Changeset' );
+
+__PACKAGE__-&gt;load_namespaces;
+
+1;
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Setup (result)</h1>
+<pre>
+package MyApp::Schema::Result::Artist;
+
+use warnings;
+use strict;
+
+use base 'MyApp::Schema::Result';
+# defaults to all columns
+__PACKAGE__-&gt;load_components('Shadow');
+__PACKAGE__-&gt;shadow_columns([qw(id name)]);
+
+__PACKAGE__-&gt;table('artists');
+
+__PACKAGE__-&gt;add_columns(
+  id =&gt; { data_type =&gt; 'int' },
+  name =&gt; { data_type =&gt; 'varchar', size =&gt; 30 },
+  notes =&gt; { data_type =&gt; 'text' },
+);
+
+__PACKAGE__-&gt;set_primary_key('id');
+
+__PACKAGE__-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
+
+1;
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Changeset Usage</h1>
+<pre>
+$schema-&gt;changeset_do({ system =&gt; undef, user_id =&gt; 5, session_id =&gt; 76 }, sub {
+   ...
+})
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow ResultSet methods</h1>
       <ul class="incremental">
-         <li>Natural: Config per Result</li>
+         <li>version</li>
+         <li>before</li>
+         <li>after</li>
+         <li>changeset</li>
+         <li>groknik</li>
       </ul>
    </div>
 
    <div class="slide">
-      <h1>ResultSet methods</h1>
-      <ul class="incremental">
-         <li></li>
-      </ul>
+      <h1>Shadow ResultSet methods (version)</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow ResultSet methods (before)</h1>
+<pre>
+$rs-&gt;before(
+   version =&gt; 5,
+);
+
+$rs-&gt;before(
+   datetime =&gt; $dt,
+);
+
+$rs-&gt;before(
+   changeset =&gt; 5,
+);
+
+$rs-&gt;before(
+   changeset_datetime =&gt; $dt,
+);
+</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow ResultSet methods (after)</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow ResultSet methods (changeset)</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow ResultSet methods (groknik)</h1>
+   </div>
+
+
+   <div class="slide">
+      <h1>Changeset: See the schema at a given state</h1>
    </div>
 
    <div class="slide">
