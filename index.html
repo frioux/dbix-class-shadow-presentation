@@ -370,6 +370,13 @@ $rs-&gt;after(
    </div>
 
    <div class="slide">
+      <h1>But what about schema changes?</h1>
+      <ul class="incremental">
+         <li>As long as your shadow columns are all nullable, that's totally fine</li>
+      </ul>
+   </div>
+
+   <div class="slide">
       <h1>Applications</h1>
       <ul class="incremental">
          <li>Database Changelog For Debugging</li>
@@ -380,6 +387,30 @@ $rs-&gt;after(
 
    <div class="slide">
       <h1>Applications (show log)</h1>
+   </div>
+
+   <div class="slide">
+      <h1>Applications (<i>Na&#239;ve</i> Reverting)</h1>
+      <ul class="incremental">
+         <li>Possible to revert</li>
+         <li>Version 1: (a, b, <u>c</u>)</li>
+         <li>Version 2: (a, b, <u>g</u>)</li>
+         <li>Current version: (x, y, <u>g</u>)</li>
+         <li>Version 2 can be reverted</li>
+         <li>because the delta would have the same "from"</li>
+      </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Applications (<i>Na&#239;ve</i> Reverting)</h1>
+      <ul class="incremental">
+         <li>Impossible to revert</li>
+         <li>Version 1: (a, b, <u>c</u>)</li>
+         <li>Version 2: (a, b, <u>g</u>)</li>
+         <li>Current version: (x, y, <u>d</u>)</li>
+         <li>Version 2 cannot be reverted</li>
+         <li>because the delta does <strong>not</strong> have the same "from"</li>
+      </ul>
    </div>
 
    <div class="slide">
