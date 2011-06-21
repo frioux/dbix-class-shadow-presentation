@@ -88,6 +88,33 @@
    </div>
 
    <div class="slide">
+      <h1>Aside: CRAZY SQL</h1>
+      <p>This is the sql that gets run before deleting a single row</p>
+<pre style="font-size: 35%">INSERT INTO shadow_tracks( rel_shadow_cds_lifecycle, shadow_stage, shadow_timestamp, shadow_val_position, shadow_val_title, shadowed_curpk_cd_id, shadowed_curpk_position, shadowed_lifecycle )
+  VALUES( (
+        SELECT me.rel_shadow_cds_lifecycle
+          FROM shadow_tracks me
+        WHERE shadowed_lifecycle = (
+            SELECT shadows.shadowed_lifecycle
+              FROM tracks me
+              JOIN shadow_tracks shadows
+                ON shadows.shadowed_curpk_cd_id = me.cd_id AND shadows.shadowed_curpk_position = me.position
+            WHERE cd_id = '4' AND position = '1'
+              LIMIT '1'
+           )
+          LIMIT '1'
+       ), '0', '13086697951239', '1', 'dear_mr_president', '4', '1', (
+        SELECT shadows.shadowed_lifecycle
+          FROM tracks me
+          JOIN shadow_tracks shadows
+            ON shadows.shadowed_curpk_cd_id = me.cd_id AND shadows.shadowed_curpk_position = me.position
+        WHERE cd_id = '4' AND position = '1'
+          LIMIT '1'
+       ) )</pre>
+       </div>
+
+
+   <div class="slide">
       <h1>Can't I just use DBIx::Class::Journal?</h1>
       <ul class="incremental">
          <li>Can only version single PK tables (no join tables)</li>
@@ -324,6 +351,10 @@ $rs-&gt;after(
          <li>Database Changelog For Users (See JIRA)</li>
          <li>Reverting Changes</li>
       </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Applications (show log)</h1>
    </div>
 
    <div class="slide">
