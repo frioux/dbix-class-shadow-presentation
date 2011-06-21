@@ -1,5 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -130,6 +129,7 @@
          <li>Cascades are supported*</li>
          <li>Cross DB</li>
          <li>Proven API</li>
+         <li>Versioned Relationships</li>
       </ul>
    </div>
 
@@ -172,7 +172,12 @@ my $p = __PACKAGE__;
 # defaults to all columns
 $p-&gt;load_components('Shadow');
 $p-&gt;shadow_columns([qw(id name)]);
+</pre>
+</div>
 
+   <div class="slide">
+      <h1>Setup (result) (cont.)</h1>
+<pre>
 $p-&gt;table('artists');
 
 $p-&gt;add_columns(
@@ -187,6 +192,17 @@ $p-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
 
 1;
 </pre>
+   </div>
+
+   <div class="slide">
+      <h1>USAGE</h1>
+      <ul class="incremental">
+         <li>Changeset Creation</li>
+         <li>Resultset</li>
+         <li>Result</li>
+         <li>Changeset</li>
+      </ul>
+
    </div>
 
    <div class="slide">
@@ -205,7 +221,7 @@ $schema-&gt;changeset_do({
    <div class="slide">
       <h1>Shadow ResultSet methods</h1>
       <ul class="incremental">
-         <li>version</li>
+         <li>revision</li>
          <li>inserts</li>
          <li>updates</li>
          <li>deletes</li>
@@ -217,33 +233,16 @@ $schema-&gt;changeset_do({
    </div>
 
    <div class="slide">
-      <h1>Shadow ResultSet methods (version)</h1>
+      <h1>Shadow ResultSet methods (revision)</h1>
+      <pre> $rs-&gt;revision(5) </pre>
    </div>
 
    <div class="slide">
-      <h1>Shadow ResultSet methods (before)</h1>
-<pre>
-$rs-&gt;before(
-   version =&gt; 5,
-);
-
-$rs-&gt;before(
-   datetime =&gt; $dt,
-);
-
-$rs-&gt;before(
-   changeset =&gt; 5,
-);
-
-$rs-&gt;before(
-   changeset_datetime =&gt; $dt,
-);
-</pre>
-   </div>
-
-   <div class="slide">
-      <h1>Shadow ResultSet methods (after)</h1>
-      <p>Same as before</p>
+      <h1>Shadow ResultSet methods (before/after)</h1>
+      <ul class="incremental">
+      <li><pre>$rs-&gt;before( revision  =&gt; 5   ); </pre></li>
+      <li><pre>$rs-&gt;before( datetime  =&gt; $dt );</pre></li>
+      <li><pre>$rs-&gt;before( changeset =&gt; 5   );</pre></li>
    </div>
 
    <div class="slide">
@@ -265,9 +264,9 @@ $rs-&gt;change(
       <h1>Shadow ResultSet methods (chain)</h1>
 <pre>
 $rs-&gt;after(
-   datetime =&gt; $last_sunday
+   datetime =&gt; DateTime-&gt;now-&gt;truncate(to =&gt; 'month')
 )-&gt;before(
-   datetime =&gt; $this_saturday
+   datetime =&gt; DateTime-&gt;now-&gt;add(days =&gt; 7)
 )-&gt;change(
    log_location =&gt; '/var/log', '/home/frew/log'
 )
@@ -282,6 +281,21 @@ $rs-&gt;after(
          <li>previous</li>
          <li>next</li>
       </ul>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow Result methods (as_result)</h1>
+      <pre>my $result = $shadow-&gt;as_result</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow Result methods (as_diff)</h1>
+      <pre>my ($type, $from, $to) = $shadow-&gt;as_diff</pre>
+      <pre>$type =~ /insert|update|delete/</pre>
+   </div>
+
+   <div class="slide">
+      <h1>Shadow Result methods (next/previous)</h1>
    </div>
 
    <div class="slide">
