@@ -287,28 +287,28 @@ $schema-&gt;changeset_do({
    <div class="slide">
       <h1>Shadow ResultSet methods</h1>
       <ul class="incremental">
-         <li>revision</li>
-         <li>inserts</li>
-         <li>updates</li>
-         <li>deletes</li>
-         <li>before</li>
-         <li>after</li>
+         <li>shadow_version</li>
+         <li>shadow_inserts</li>
+         <li>shadow_updates</li>
+         <li>shadow_deletes</li>
+         <li>shadows_before</li>
+         <li>shadows_after</li>
          <li>changeset</li>
          <li>change</li>
       </ul>
    </div>
 
    <div class="slide">
-      <h1>Shadow ResultSet methods (revision)</h1>
-      <pre> $rs-&gt;revision(5) </pre>
+      <h1>Shadow ResultSet methods (shadow_version)</h1>
+      <pre> $rs-&gt;shadow_version(5) </pre>
    </div>
 
    <div class="slide">
-      <h1>Shadow ResultSet methods (before/after)</h1>
+      <h1>Shadow ResultSet methods (shadows_before/shadows_after)</h1>
       <ul class="incremental">
-      <li><pre>$rs-&gt;before( revision  =&gt; 5   ); </pre></li>
-      <li><pre>$rs-&gt;before( datetime  =&gt; $dt );</pre></li>
-      <li><pre>$rs-&gt;before( changeset =&gt; 5   );</pre></li>
+      <li><pre>$rs-&gt;shadows_before( revision  =&gt; 5   ); </pre></li>
+      <li><pre>$rs-&gt;shadows_before( datetime  =&gt; $dt );</pre></li>
+      <li><pre>$rs-&gt;shadows_before( changeset =&gt; 5   );</pre></li>
    </div>
 
    <div class="slide">
@@ -329,9 +329,9 @@ $rs-&gt;change(
    <div class="slide">
       <h1>Shadow ResultSet methods (chain)</h1>
 <pre>
-$rs-&gt;after(
+$rs-&gt;shadows_after(
    datetime =&gt; DateTime-&gt;now-&gt;truncate(to =&gt; 'month')
-)-&gt;before(
+)-&gt;shadows_before(
    datetime =&gt; DateTime-&gt;now-&gt;add(days =&gt; 7)
 )-&gt;change(
    log_location =&gt; '/var/log', '/home/frew/log'
@@ -344,8 +344,8 @@ $rs-&gt;after(
       <ul class="incremental">
          <li>as_result</li>
          <li>as_diff</li>
-         <li>previous</li>
-         <li>next</li>
+         <li>previous_shadow</li>
+         <li>next_shadow</li>
       </ul>
    </div>
 
@@ -361,7 +361,7 @@ $rs-&gt;after(
    </div>
 
    <div class="slide">
-      <h1>Shadow Result methods (next/previous)</h1>
+      <h1>Shadow Result methods (next_shadow/previous_shadow)</h1>
    </div>
 
    <div class="slide">
