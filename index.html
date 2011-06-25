@@ -261,6 +261,43 @@ $p-&gt;has_many(cds =&gt; 'MyApp::Schema::Result::CD', 'artist_id');
    </div>
 
    <div class="slide">
+      <h1>Setup (Changeset Result)</h1>
+<pre>
+package MyApp::Schema::Result::Changeset;
+
+use parent 'MyApp::Schema::Result';
+
+my $p = __PACKAGE__;
+# defaults to all columns
+
+$p-&gt;table('changeset');
+
+$p-&gt;add_columns(
+  id =&gt; { data_type =&gt; 'int' },
+  timestamp =&gt; { data_type =&gt; 'bigint' },
+  user_id =&gt; { data_type =&gt; 'int' },
+);
+</pre>
+</div>
+
+   <div class="slide">
+      <h1>Setup (Changeset Result cont.)</h1>
+<pre>
+$p-&gt;set_primary_key('id');
+
+$p-&gt;belongs_to(user =&gt; 'MyApp::Schema::Result::User', 'user_id');
+
+sub new_changeset {
+   my ($class, $rsrc, $params) = @_;
+
+   $rsrc-&gt;resultset-&gt;new_result($params);
+}
+
+1;
+</pre>
+   </div>
+
+   <div class="slide">
       <h1>USAGE</h1>
       <ul class="incremental">
          <li>Changeset Creation</li>
