@@ -209,6 +209,16 @@
    </div>
 
    <div class="slide">
+      <h1>Shadow</h1>
+      <img src="img/shadow.jpg" />
+   </div>
+
+   <div class="slide">
+      <h1>Lifecycle</h1>
+      <img src="img/dragon.jpg" />
+   </div>
+
+   <div class="slide">
       <h1>Terminology (Shadow)</h1>
       <ul class="incremental">
          <li><pre>my $tea = $rs-&gt;create({ name =&gt; 'sencha' });</pre></li>
@@ -312,6 +322,11 @@ sub new_changeset {
 
    <div class="slide">
       <h1>USAGE</h1>
+      <img src="img/unicorn.jpg" />
+   </div>
+
+   <div class="slide">
+      <h1>USAGE</h1>
       <ul class="incremental">
          <li>Changeset Creation</li>
          <li>Resultset</li>
@@ -360,11 +375,12 @@ $schema-&gt;changeset_do({
       <li><pre>$rs-&gt;shadows_before( datetime  =&gt; $dt );</pre></li>
       <li><pre>$rs-&gt;shadows_before( changeset =&gt; 5   );</pre></li>
    </div>
-
+<!--
    <div class="slide">
       <h1>Shadow ResultSet methods (changeset)</h1>
       <p>???</p>
    </div>
+-->
 
    <div class="slide">
       <h1>Shadow ResultSet methods (change)</h1>
@@ -413,11 +429,20 @@ $result-&gt;roles-&gt;related_resultset('permissions')</pre>
 
    <div class="slide">
       <h1>Shadow Result methods (next_shadow/previous_shadow)</h1>
+      <pre>while (my $row = $row-&gt;next_shadow) {
+ ...;
+}</pre>
    </div>
 
+<!--
    <div class="slide">
       <h1>Changeset: Schema at a given state</h1>
       <p>???</p>
+   </div>
+-->
+
+   <div class="slide">
+      <h1>"FAQ"</h1>
    </div>
 
    <div class="slide">
